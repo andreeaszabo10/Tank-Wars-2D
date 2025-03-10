@@ -1,4 +1,4 @@
-#include "lab_m1/tema1/object2D.h"
+#include "object2D.h"
 
 #include <vector>
 
