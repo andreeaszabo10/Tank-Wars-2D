@@ -1,4 +1,4 @@
-﻿#include "lab_m1/tema1/tema1.h"
+﻿#include "tanks.h"
 
 #include <vector>
 #include <iostream>
@@ -6,10 +6,10 @@
 using namespace std;
 using namespace m1;
 
-#include "lab_m1/tema1/transform2D.h"
-#include "lab_m1/tema1/object2D.h"
+#include "transform2D.h"
+#include "object2D.h"
 
-Tema1::Tema1()
+Tanks::Tanks()
 {
     X1 = 100;
     X2 = 1000;
@@ -28,12 +28,12 @@ Tema1::Tema1()
 }
 
 
-Tema1::~Tema1()
+Tanks::~Tanks()
 {
 }
 
 
-void Tema1::Init()
+void Tanks::Init()
 {
     glm::ivec2 resolution = window->GetResolution();
     auto camera = GetSceneCamera();
@@ -79,11 +79,11 @@ struct Projectile {
     int who;
 };
 
-float Tema1::Terrain(float x) {
+float Tanks::Terrain(float x) {
     return 32 * sin(x / 64) + 64 * sin(x / 128) + 32 * sin(x / 32);
 }
 
-void Tema1::FrameStart()
+void Tanks::FrameStart()
 {
     if (change == false) backgroundColor = glm::vec3(0.55f, 0.8f, 1);
     else backgroundColor = glm::vec3(34 / 255.f, 66 / 255.f, 124 / 255.f);
@@ -94,7 +94,7 @@ void Tema1::FrameStart()
     glViewport(0, 0, resolution.x, resolution.y);
 }
 
-void Tema1::GenerateTerrain() {
+void Tanks::GenerateTerrain() {
     heightMap.clear();
     float terrainWidth = window->GetResolution().x;
     float terrainHeight = window->GetResolution().y;
@@ -107,7 +107,7 @@ void Tema1::GenerateTerrain() {
     }
 }
 
-void Tema1::RenderTerrain() {
+void Tanks::RenderTerrain() {
 
     for (size_t i = 0; i < heightMap.size() - 1; i++) {
         glm::vec2 A = heightMap[i];
@@ -141,7 +141,7 @@ void Tema1::RenderTerrain() {
     }
 }
 
-void Tema1::RenderTank(int hitCount, float* X, float* Y, float* angle, float barrelAngle, int ok) {
+void Tanks::RenderTank(int hitCount, float* X, float* Y, float* angle, float barrelAngle, int ok) {
     glm::mat3 modelMatrix = glm::mat3(1);
     if (*X < 0) *X = 0;
     if (*X > 1280) *X = 1280;
@@ -185,7 +185,7 @@ void Tema1::RenderTank(int hitCount, float* X, float* Y, float* angle, float bar
     }
 }
 
-void Tema1::RenderTrajectory(float X, float Y, float angle, float barrelAngle, int hitCount) {
+void Tanks::RenderTrajectory(float X, float Y, float angle, float barrelAngle, int hitCount) {
     float len = 22;
     float offsetY = 15;
     std::vector<glm::vec2> trajectoryPoints;
@@ -214,7 +214,7 @@ void Tema1::RenderTrajectory(float X, float Y, float angle, float barrelAngle, i
 
 float rotationAngle = 0;
 
-void Tema1::RenderClouds(float deltaTimeSeconds) {
+void Tanks::RenderClouds(float deltaTimeSeconds) {
     glm::mat3 modelMatrix = glm::mat3(1);
     cloud1 += deltaTimeSeconds * 40;
     if (cloud1 + 100 > 1280) cloud1 = -290;
@@ -235,7 +235,7 @@ void Tema1::RenderClouds(float deltaTimeSeconds) {
     RenderMesh2D(meshes[name], shaders["VertexColor"], modelMatrix);
 }
 
-void Tema1::RenderSunMoon(float deltaTimeSeconds) {
+void Tanks::RenderSunMoon(float deltaTimeSeconds) {
     glm::mat3 modelMatrix = glm::mat3(1);
     rotationAngle += deltaTimeSeconds * 0.1f;
     if (rotationAngle > 2 * M_PI) {
@@ -267,7 +267,7 @@ void Tema1::RenderSunMoon(float deltaTimeSeconds) {
     RenderMesh2D(meshes["circle2"], shaders["VertexColor"], modelMatrix);
 }
 
-void Tema1::RenderProjectiles(float deltaTimeSeconds) {
+void Tanks::RenderProjectiles(float deltaTimeSeconds) {
     for (size_t i = 0; i < projectiles.size(); ) {
         struct Projectile& proj = projectiles[i];
         proj.P += proj.v * proj.time;
@@ -319,7 +319,7 @@ void Tema1::RenderProjectiles(float deltaTimeSeconds) {
     }
 }
 
-void Tema1::Update(float deltaTimeSeconds) {
+void Tanks::Update(float deltaTimeSeconds) {
 
     RenderClouds(deltaTimeSeconds);
     RenderTerrain();
@@ -338,11 +338,11 @@ void Tema1::Update(float deltaTimeSeconds) {
 }
 
 
-void Tema1::FrameEnd()
+void Tanks::FrameEnd()
 {
 }
 
-void Tema1::OnInputUpdate(float deltaTime, int mods)
+void Tanks::OnInputUpdate(float deltaTime, int mods)
 {
     if (window->KeyHold(GLFW_KEY_A)) {
         X1 -= deltaTime * 100;
@@ -384,7 +384,7 @@ void Tema1::OnInputUpdate(float deltaTime, int mods)
     }
 }
 
-void Tema1::startProjectile(float X, float Y, float barrelAngle, float angle, int who) {
+void Tanks::startProjectile(float X, float Y, float barrelAngle, float angle, int who) {
     float len = 22;
     float offsetY = 15;
 
@@ -397,7 +397,7 @@ void Tema1::startProjectile(float X, float Y, float barrelAngle, float angle, in
     projectiles.push_back(proj);
 }
 
-void Tema1::OnKeyPress(int key, int mods)
+void Tanks::OnKeyPress(int key, int mods)
 {
     if (key == GLFW_KEY_SPACE && hitCount1 < maxHitCount) {
         startProjectile(X1, Y1, barrelAngle1, angle1, 1);
@@ -408,35 +408,35 @@ void Tema1::OnKeyPress(int key, int mods)
 }
 
 
-void Tema1::OnKeyRelease(int key, int mods)
+void Tanks::OnKeyRelease(int key, int mods)
 {
 
 }
 
 
-void Tema1::OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY)
+void Tanks::OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY)
 {
 
 }
 
 
-void Tema1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods)
+void Tanks::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods)
 {
 
 }
 
 
-void Tema1::OnMouseBtnRelease(int mouseX, int mouseY, int button, int mods)
+void Tanks::OnMouseBtnRelease(int mouseX, int mouseY, int button, int mods)
 {
 
 }
 
 
-void Tema1::OnMouseScroll(int mouseX, int mouseY, int offsetX, int offsetY)
+void Tanks::OnMouseScroll(int mouseX, int mouseY, int offsetX, int offsetY)
 {
 }
 
 
-void Tema1::OnWindowResize(int width, int height)
+void Tanks::OnWindowResize(int width, int height)
 {
 }
