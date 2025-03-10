@@ -5,11 +5,11 @@
 
 namespace m1
 {
-    class Tema1 : public gfxc::SimpleScene
+    class Tanks : public gfxc::SimpleScene
     {
     public:
-        Tema1();
-        ~Tema1();
+        Tanks();
+        ~Tanks();
 
         void Init() override;
 
